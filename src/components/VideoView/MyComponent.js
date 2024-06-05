@@ -1,3 +1,4 @@
+import React from 'react';
 import "@whereby.com/browser-sdk"
 import "./MyComponent.module.css"
 
