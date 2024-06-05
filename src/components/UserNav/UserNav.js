@@ -20,6 +20,13 @@ const UserNav = props => {
       },
     },
     {
+      text: <FormattedMessage id="UserNav.availabilitySettings" />,
+      selected: currentPage === 'AvailabilitySettingsPage',
+      linkProps: {
+        name: 'AvailabilitySettingsPage',
+      },
+    },
+    {
       text: <FormattedMessage id="UserNav.profileSettings" />,
       selected: currentPage === 'ProfileSettingsPage',
       disabled: false,
