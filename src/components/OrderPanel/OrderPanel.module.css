@@ -288,3 +288,13 @@
     padding: 0;
   }
 }
+
+.scheduleMeeting {
+  display: flex;
+}
+
+.ml2 {
+  margin-left: 12px;
+}
+
+

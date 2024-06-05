@@ -44,9 +44,11 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import { ModalInMobile, PrimaryButton, SecondaryButton, AvatarSmall, H1, H2, Modal } from '../../components';
 
 import css from './OrderPanel.module.css';
+import css2 from '../Button/ButtonExample.module.css';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
@@ -371,6 +373,12 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
           </p>
         ) : null}
+        <h4>Schedule meeting</h4>
+        <div className={css.scheduleMeeting}>
+          <PrimaryButton>In Person</PrimaryButton>
+          <Link to="/v" className={classNames(css.ml2, css2.buttonLinkPrimary)}>Virtual</Link>
+        </div>
+        {/* <Modal isOpen={true} onClose onManageDisableScrolling={onManageDisableScrolling} /> */}
       </ModalInMobile>
       <div className={css.openOrderForm}>
         <PriceMaybe

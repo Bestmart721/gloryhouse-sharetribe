@@ -89,6 +89,7 @@ const PageBuilder = props => {
     schemaType,
     options,
     currentPage,
+    children,
     ...pageProps
   } = props;
 
@@ -118,6 +119,7 @@ const PageBuilder = props => {
                 <TopbarContainer currentPage={currentPage} />
               </Topbar>
               <Main as="main" className={css.main}>
+                {children}
                 {sections.length === 0 && inProgress ? (
                   <LoadingSpinner />
                 ) : (
