@@ -458,6 +458,7 @@ export const CheckoutPageWithPayment = props => {
                 }
                 inProgress={submitting}
                 formId="CheckoutPagePaymentForm"
+                serviceMode={orderData.serviceMode}
                 authorDisplayName={listing?.author?.attributes?.profile?.displayName}
                 showInitialMessageInput={showInitialMessageInput}
                 initialValues={initalValuesForStripePayment}

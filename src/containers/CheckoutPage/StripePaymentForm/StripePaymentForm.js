@@ -180,8 +180,8 @@ const getPaymentMethod = (selectedPaymentMethod, hasDefaultPaymentMethod) => {
   return selectedPaymentMethod == null && hasDefaultPaymentMethod
     ? 'defaultCard'
     : selectedPaymentMethod == null
-    ? 'onetimeCardPayment'
-    : selectedPaymentMethod;
+      ? 'onetimeCardPayment'
+      : selectedPaymentMethod;
 };
 
 // Should we show onetime payment fields and does StripeElements card need attention
@@ -223,8 +223,8 @@ const LocationOrShippingDetails = props => {
   const locationDetails = listingLocation?.building
     ? `${listingLocation.building}, ${listingLocation.address}`
     : listingLocation?.address
-    ? listingLocation.address
-    : intl.formatMessage({ id: 'StripePaymentForm.locationUnknown' });
+      ? listingLocation.address
+      : intl.formatMessage({ id: 'StripePaymentForm.locationUnknown' });
 
   return askShippingDetails ? (
     <ShippingDetails intl={intl} formApi={formApi} locale={locale} />
@@ -391,7 +391,7 @@ class StripePaymentForm extends Component {
       hasHandledCardPayment,
       defaultPaymentMethod,
     } = this.props;
-    const { initialMessage } = values;
+    const { initialMessage, serviceMode } = values;
     const { cardValueValid, paymentMethod } = this.state;
     const hasDefaultPaymentMethod = defaultPaymentMethod?.id;
     const selectedPaymentMethod = getPaymentMethod(paymentMethod, hasDefaultPaymentMethod);
@@ -408,7 +408,8 @@ class StripePaymentForm extends Component {
     }
 
     const params = {
-      message: initialMessage ? initialMessage.trim() : null,
+      message: `Hello ${this.props.authorDisplayName}!\nI request ${(serviceMode == 'virtual' ? 'a Virtual' : 'an In-Person')} service.`
+        + "\n" + (initialMessage ? initialMessage.trim() : null),
       card: this.card,
       formId,
       formValues: values,
@@ -487,10 +488,10 @@ class StripePaymentForm extends Component {
       confirmCardPaymentError && confirmCardPaymentError.code === piAuthenticationFailure
         ? intl.formatMessage({ id: 'StripePaymentForm.confirmCardPaymentError' })
         : confirmCardPaymentError
-        ? confirmCardPaymentError.message
-        : confirmPaymentError
-        ? intl.formatMessage({ id: 'StripePaymentForm.confirmPaymentError' })
-        : intl.formatMessage({ id: 'StripePaymentForm.genericError' });
+          ? confirmCardPaymentError.message
+          : confirmPaymentError
+            ? intl.formatMessage({ id: 'StripePaymentForm.confirmPaymentError' })
+            : intl.formatMessage({ id: 'StripePaymentForm.genericError' });
 
     const billingDetailsNameLabel = intl.formatMessage({
       id: 'StripePaymentForm.billingDetailsNameLabel',
@@ -629,6 +630,17 @@ class StripePaymentForm extends Component {
               <FormattedMessage id="StripePaymentForm.messageHeading" />
             </Heading>
 
+            {this.props.serviceMode ?
+              <p>
+                Service mode:
+                <strong>{this.props.serviceMode == 'virtual' ? 'Virtual' : 'In Person'}</strong>
+              </p>
+              : ""}
+            <FieldTextInput type='hidden' name='serviceMode' defaultValue={this.props.serviceMode} />
+            {/* <FieldTextInput type='text' name='serviceMode' value={this.props.serviceMode} /> */}
+            {/* <input type='text' name='serviceMode' defaultValue={this.props.serviceMode} /> */}
+            {/* <input type='text' name='serviceMode' value={this.props.serviceMode} /> */}
+
             <FieldTextInput
               type="textarea"
               id={`${formId}-message`}
@@ -710,6 +722,7 @@ StripePaymentForm.propTypes = {
   confirmPaymentError: object,
   formId: string.isRequired,
   onSubmit: func.isRequired,
+  serviceMode: string,
   authorDisplayName: string.isRequired,
   showInitialMessageInput: bool,
   hasHandledCardPayment: bool,
