@@ -9,7 +9,7 @@ import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
-import { Form, H6, PrimaryButton } from '../../../components';
+import { FieldRadioButton, Form, H6, PrimaryButton } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
@@ -105,9 +105,9 @@ export class BookingTimeFormComponent extends Component {
           const breakdownData =
             startDate && endDate
               ? {
-                  startDate,
-                  endDate,
-                }
+                startDate,
+                endDate,
+              }
               : null;
 
           const showEstimatedBreakdown =
@@ -166,6 +166,23 @@ export class BookingTimeFormComponent extends Component {
                   <FormattedMessage id="BookingTimeForm.fetchLineItemsError" />
                 </span>
               ) : null}
+
+              <div className={css.priceBreakdownContainer}>
+                <FieldRadioButton
+                  id={`inPerson`}
+                  name="serviceMode"
+                  label="In Person"
+                  value="inPerson"
+                  showAsRequired={true}
+                />
+                <FieldRadioButton
+                  id={`virtual`}
+                  name="serviceMode"
+                  label="Virtual"
+                  value="virtual"
+                  showAsRequired={true}
+                />
+              </div>
 
               <div className={css.submitButton}>
                 <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>

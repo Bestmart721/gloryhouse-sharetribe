@@ -163,7 +163,7 @@ const TopbarMobileMenu = props => {
             className={classNames(css.navigationLink, currentPageClass('availabilitySettingsPage'))}
             name="AvailabilitySettingsPage"
           >
-            <FormattedMessage id="TopbarMobileMenu.AvailabilitySettingsLink" />
+            <FormattedMessage id="TopbarMobileMenu.availabilitySettingsLink" />
           </NamedLink>
           <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}

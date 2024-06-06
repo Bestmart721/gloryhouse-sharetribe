@@ -1119,5 +1119,6 @@
   "UserDisplayName.deleted": "Gelöschter Benutzer",
   "UserNav.accountSettings": "Kontoeinstellungen",
   "UserNav.profileSettings": "Profileinstellungen",
-  "UserNav.yourListings": "Deine Einträge"
+  "UserNav.yourListings": "Deine Einträge",
+  "TopbarMobileMenu.availabilitySettingsLink": "Verfügbarkeitseinstellungen"
 }

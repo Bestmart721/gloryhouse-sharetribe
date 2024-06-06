@@ -373,12 +373,12 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
           </p>
         ) : null}
-        <h4>Schedule meeting</h4>
+        {/* <h4>Schedule meeting</h4>
         <div className={css.scheduleMeeting}>
           <PrimaryButton>In Person</PrimaryButton>
           <Link to="/v" className={classNames(css.ml2, css2.buttonLinkPrimary)}>Virtual</Link>
         </div>
-        {/* <Modal isOpen={true} onClose onManageDisableScrolling={onManageDisableScrolling} /> */}
+        <Modal isOpen={true} onClose onManageDisableScrolling={onManageDisableScrolling} /> */}
       </ModalInMobile>
       <div className={css.openOrderForm}>
         <PriceMaybe

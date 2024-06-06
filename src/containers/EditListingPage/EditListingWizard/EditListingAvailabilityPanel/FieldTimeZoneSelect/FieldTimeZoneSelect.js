@@ -6,9 +6,9 @@ import { FieldSelect } from '../../../../../components';
 const FieldTimeZoneSelect = props => {
   // IANA database contains irrelevant time zones too.
   const relevantZonesPattern = new RegExp(
-    '^(Africa|America(?!/(Argentina/ComodRivadavia|Knox_IN|Nuuk))|Antarctica(?!/(DumontDUrville|McMurdo))|Asia(?!/Qostanay)|Atlantic|Australia(?!/(ACT|LHI|NSW))|Europe|Indian|Pacific)'
+    '^(US/(.*))'
   );
-
+  
   return (
     <FieldSelect {...props}>
       <option disabled value="">

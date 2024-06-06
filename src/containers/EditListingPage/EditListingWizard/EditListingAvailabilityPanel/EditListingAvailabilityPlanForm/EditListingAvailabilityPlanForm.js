@@ -6,7 +6,7 @@ import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../../../util/reactIntl';
-import { Form, Heading, H3, PrimaryButton } from '../../../../../components';
+import { Form, Heading, H4, PrimaryButton } from '../../../../../components';
 import FieldTimeZoneSelect from '../FieldTimeZoneSelect';
 import AvailabilityPlanEntries from './AvailabilityPlanEntries';
 
@@ -90,12 +90,12 @@ const EditListingAvailabilityPlanFormComponent = props => {
 
         return (
           <Form id={formId} className={classes} onSubmit={handleSubmit}>
-            <H3 as="h2" className={css.heading}>
+            <H4 as="h2" className={css.heading}>
               <FormattedMessage
                 id="EditListingAvailabilityPlanForm.title"
                 values={{ listingTitle }}
               />
-            </H3>
+            </H4>
             <Heading as="h3" rootClassName={css.subheading}>
               <FormattedMessage id="EditListingAvailabilityPlanForm.timezonePickerTitle" />
             </Heading>

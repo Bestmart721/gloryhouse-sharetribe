@@ -1119,5 +1119,6 @@
   "UserDisplayName.deleted": "Usuario eliminado",
   "UserNav.accountSettings": "Configuración de la cuenta",
   "UserNav.profileSettings": "Configuración de perfil",
-  "UserNav.yourListings": "Tus anuncios"
+  "UserNav.yourListings": "Tus anuncios",
+  "TopbarMobileMenu.availabilitySettingsLink": "Configuración de disponibilidad"
 }
