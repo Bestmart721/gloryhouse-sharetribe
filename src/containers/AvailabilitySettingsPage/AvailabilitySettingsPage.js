@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -16,9 +16,26 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import AvailabilitySettingsForm from './AvailabilitySettingsForm/AvailabilitySettingsForm';
 
-import { updateProfile, uploadImage } from './AvailabilitySettingsPage.duck';
 import css from './AvailabilitySettingsPage.module.css';
 import { initialValuesForUserFields, pickUserFieldsData } from '../../util/userHelpers';
+import { Calendar, momentLocalizer } from 'react-big-calendar'
+import moment from 'moment'
+import "react-big-calendar/lib/css/react-big-calendar.css"
+
+const localizer = momentLocalizer(moment)
+
+const MyCalendar = (props) => (
+  <div>
+    <Calendar
+      localizer={localizer}
+      // events={myEventsList}
+      startAccessor="start"
+      endAccessor="end"
+      style={{ height: 600 }}
+      {...props}
+    />
+  </div>
+)
 
 const onImageUploadHandler = (values, fn) => {
   const { id, imageId, file } = values;
@@ -127,6 +144,145 @@ export const AvailabilitySettingsPageComponent = props => {
 
   const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
 
+  const [events, setEvents] = useState([
+    {
+      title: 'Initial Event',
+      start: new Date(),
+      end: new Date(),
+    },
+  ]);
+
+  // Helper function to add recurring events
+  const generateRecurringEvents = (event, recurrenceRule) => {
+    const { start, end, title } = event;
+    const recurringEvents = [];
+
+    if (recurrenceRule === 'Daily') {
+      for (let i = 1; i <= 30; i++) {
+        recurringEvents.push({
+          title,
+          start: moment(start).add(i, 'days').toDate(),
+          end: moment(end).add(i, 'days').toDate(),
+        });
+      }
+    } else if (recurrenceRule === 'Weekly') {
+      for (let i = 1; i <= 10; i++) {
+        recurringEvents.push({
+          title,
+          start: moment(start).add(i, 'weeks').toDate(),
+          end: moment(end).add(i, 'weeks').toDate(),
+        });
+      }
+    } else if (recurrenceRule === 'Monthly') {
+      for (let i = 1; i <= 12; i++) {
+        recurringEvents.push({
+          title,
+          start: moment(start).add(i, 'months').toDate(),
+          end: moment(end).add(i, 'months').toDate(),
+        });
+      }
+    }
+
+    return recurringEvents;
+  };
+
+  // Function to handle event creation
+  const handleSelectSlot = ({ start, end }) => {
+    const title = window.prompt('New Event name');
+    if (title) {
+      const recurrenceRule = window.prompt('Recurrence (None, Daily, Weekly, Monthly)', 'None');
+      const newEvent = { start, end, title };
+      const recurringEvents = recurrenceRule !== 'None' ? generateRecurringEvents(newEvent, recurrenceRule) : [];
+
+      setEvents((prevEvents) => [
+        ...prevEvents,
+        newEvent,
+        ...recurringEvents,
+      ]);
+    }
+  };
+
+  // Function to handle event editing
+  const handleSelectEvent = (event) => {
+    const newTitle = window.prompt('Edit Event name', event.title);
+    if (newTitle) {
+      const newStartStr = window.prompt('Edit Start Time (YYYY-MM-DD HH:mm)', moment(event.start).format('YYYY-MM-DD HH:mm'));
+      const newEndStr = window.prompt('Edit End Time (YYYY-MM-DD HH:mm)', moment(event.end).format('YYYY-MM-DD HH:mm'));
+
+      const newStart = new Date(newStartStr);
+      const newEnd = new Date(newEndStr);
+
+      setEvents((prevEvents) =>
+        prevEvents.map((evt) =>
+          evt === event ? { ...evt, title: newTitle, start: newStart, end: newEnd } : evt
+        )
+      );
+    }
+  };
+
+  const dayOfWeekMap = {
+    sun: 0,
+    mon: 1,
+    tue: 2,
+    wed: 3,
+    thu: 4,
+    fri: 5,
+    sat: 6
+  };
+
+  useEffect(() => {
+    const events = [];
+
+    // Number of weeks to generate events for
+    const weeksToGenerate = 4;
+    
+    for (let i = 0; i < weeksToGenerate; i++) {
+      const today = new Date();
+      const startDate = new Date(today);
+      const endDate = new Date(today);
+    
+      // Set start date to the beginning of the current week
+      startDate.setDate(today.getDate() - today.getDay() + 7 * i);
+      // Set end date to the end of the current week
+      endDate.setDate(today.getDate() - today.getDay() + 6 + 7 * i);
+    
+      props.transactions?.forEach(listing => {
+        const { id, attributes } = listing;
+        const { title, availabilityPlan } = attributes;
+    
+        if (availabilityPlan && availabilityPlan.entries) {
+          availabilityPlan.entries.forEach(entry => {
+            const { dayOfWeek, startTime, endTime } = entry;
+            const targetDay = new Date(startDate);
+    
+            // Calculate the target day of the week for the current entry
+            const diff = (dayOfWeekMap[dayOfWeek] - startDate.getDay() + 7) % 7;
+            targetDay.setDate(startDate.getDate() + diff);
+    
+            const start = new Date(targetDay);
+            const end = new Date(targetDay);
+    
+            const [startHour, startMinute] = startTime.split(":").map(Number);
+            const [endHour, endMinute] = endTime.split(":").map(Number);
+    
+            start.setHours(startHour, startMinute);
+            end.setHours(endHour, endMinute);
+    
+            events.push({
+              id: id.uuid,
+              title: title,
+              start: start,
+              end: end,
+              allDay: false
+            });
+          });
+        }
+      });
+    }
+
+    setEvents(events)
+  }, [props.listings])
+
   return (
     <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSingleColumn
@@ -139,7 +295,7 @@ export const AvailabilitySettingsPageComponent = props => {
         footer={<FooterContainer />}
       >
         <div className={css.content}>
-          {availabilitySettingsForm}
+          <MyCalendar selectable events={events} onSelectSlot={handleSelectSlot} onSelectEvent={handleSelectEvent} />
         </div>
       </LayoutSingleColumn>
     </Page>
@@ -162,13 +318,9 @@ AvailabilitySettingsPageComponent.propTypes = {
     file: object,
     uploadedImage: propTypes.image,
   }),
-  onImageUpload: func.isRequired,
-  onUpdateProfile: func.isRequired,
   scrollingDisabled: bool.isRequired,
-  updateInProgress: bool.isRequired,
   updateProfileError: propTypes.error,
   uploadImageError: propTypes.error,
-  uploadInProgress: bool.isRequired,
 
   // from useConfiguration()
   config: object,
@@ -180,26 +332,25 @@ AvailabilitySettingsPageComponent.propTypes = {
 const mapStateToProps = state => {
   const { currentUser } = state.user;
   const {
-    image,
+    currentPageResultIds,
+  } = state.ManageListingsPage;
+  const {
+    transactions,
     uploadImageError,
     uploadInProgress,
     updateInProgress,
     updateProfileError,
   } = state.AvailabilitySettingsPage;
   return {
-    currentUser,
-    image,
     scrollingDisabled: isScrollingDisabled(state),
-    updateInProgress,
-    updateProfileError,
-    uploadImageError,
-    uploadInProgress,
+    currentPageResultIds,
+    transactions,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  onImageUpload: data => dispatch(uploadImage(data)),
-  onUpdateProfile: data => dispatch(updateProfile(data)),
+  // onImageUpload: data => dispatch(uploadImage(data)),
+  // onUpdateProfile: data => dispatch(updateProfile(data)),
 });
 
 const AvailabilitySettingsPage = compose(

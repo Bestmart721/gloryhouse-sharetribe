@@ -3,13 +3,23 @@
 .root {
   background-color: var(--colorWhite);
 }
-.content {
-  width: calc(100% - 48px);
-  margin: 12px 24px 24px 24px;
+.content,
+.messagePanel,
+.listingPanel {
+  width: 100%;
+  margin: 24px auto 0 auto;
 
   @media (--viewportMedium) {
-    max-width: 565px;
-    margin: 55px auto 56px auto;
+    margin: 48px auto 0 auto;
+  }
+
+  @media (--viewportLarge) {
+    margin: 72px auto 0 auto;
+    max-width: calc(var(--contentMaxWidth) + 72px);
+  }
+
+  @media (--viewportXLarge) {
+    max-width: var(--contentMaxWidth);
   }
 }
 

@@ -160,3 +160,20 @@ export const updateProfile = actionPayload => {
       .catch(e => dispatch(updateProfileError(storableError(e))));
   };
 };
+
+export const loadData = (params, search, config) => {
+  return (dispatch, getState, sdk) => {
+    return sdk.transactions
+      .query({ status: "accepted", only: "sale" })
+      .then(response => {
+        console.log(response)
+        // dispatch(addOwnEntities(response));
+        // dispatch(queryListingsSuccess(response));
+        return response;
+      })
+      .catch(e => {
+        // dispatch(queryListingsError(storableError(e)));
+        throw e;
+      });
+  }
+};

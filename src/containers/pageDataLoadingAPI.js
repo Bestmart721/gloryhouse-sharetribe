@@ -11,6 +11,7 @@ import { loadData as EmailVerificationPageLoader } from './EmailVerificationPage
 import { loadData as InboxPageLoader } from './InboxPage/InboxPage.duck';
 import { loadData as ListingPageLoader } from './ListingPage/ListingPage.duck';
 import { loadData as ManageListingsPageLoader } from './ManageListingsPage/ManageListingsPage.duck';
+import { loadData as AvailabilitySettingsPageLoader } from './AvailabilitySettingsPage/AvailabilitySettingsPage.duck';
 import { loadData as PaymentMethodsPageLoader } from './PaymentMethodsPage/PaymentMethodsPage.duck';
 import { loadData as PrivacyPolicyPageLoader } from './PrivacyPolicyPage/PrivacyPolicyPage.duck';
 import { loadData as VideoCallPageLoader } from './VideoCallPage/VideoCallPage.duck';
@@ -54,6 +55,9 @@ const getPageDataLoadingAPI = () => {
     },
     ManageListingsPage: {
       loadData: ManageListingsPageLoader,
+    },
+    AvailabilitySettingsPage: {
+      loadData: AvailabilitySettingsPageLoader
     },
     PaymentMethodsPage: {
       loadData: PaymentMethodsPageLoader,

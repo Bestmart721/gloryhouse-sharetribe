@@ -166,6 +166,7 @@ const routeConfiguration = (layoutConfig) => {
       auth: true,
       authPage: 'LoginPage',
       component: AvailabilitySettingsPage,
+      loadData: pageDataLoadingAPI.AvailabilitySettingsPage.loadData,
     },
     {
       path: '/profile-settings',

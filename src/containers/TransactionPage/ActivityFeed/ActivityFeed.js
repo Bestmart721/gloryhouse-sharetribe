@@ -36,7 +36,12 @@ const Message = props => {
       <Avatar className={css.avatar} user={message.sender} />
       <div>
         <p className={css.messageContent}>{content}</p>
-        <p className={css.messageDate}>{formattedDate}</p>
+        <p style={{ margin: 0, display: "flex" }}>
+          <span className={css.messageDate}>{formattedDate}</span>
+          {content.join("").search("I request a Virtual service.") !== -1 ?
+            <a target='_blank' className='marketplaceMessageDateFontStyles' href="https://www.google.com/calendar/render?action=TEMPLATE&text=Video+Call&dates=20240610T150000Z/20240610T160000Z&details=Join+the+video+call+using+this+link:+https://example.com/call-link&location=&recur=RRULE:FREQ=DAILY;BYHOUR=12;BYMINUTE=0;BYSECOND=0&trp=false&sprop=&sprop=name:" style={{ marginLeft: 'auto' }}>Schedule Video Call</a> :
+            <></>}
+        </p>
       </div>
     </div>
   );
@@ -112,8 +117,8 @@ const TransitionMessage = props => {
     transition.by === ownRole
       ? 'you'
       : [TX_TRANSITION_ACTOR_SYSTEM, TX_TRANSITION_ACTOR_OPERATOR].includes(transition.by)
-      ? transition.by
-      : otherUsersName;
+        ? transition.by
+        : otherUsersName;
 
   const reviewLink = showReviewAsFirstLink ? (
     <InlineTextButton onClick={onOpenReviewModal}>
@@ -263,8 +268,8 @@ export const ActivityFeedComponent = props => {
       const reviewEntity = isCustomerReview
         ? reviewByAuthorId(transaction, customer.id)
         : isProviderRieview
-        ? reviewByAuthorId(transaction, provider.id)
-        : null;
+          ? reviewByAuthorId(transaction, provider.id)
+          : null;
 
       const listingTitle = listing.attributes.deleted
         ? intl.formatMessage({ id: 'TransactionPage.ActivityFeed.deletedListing' })
