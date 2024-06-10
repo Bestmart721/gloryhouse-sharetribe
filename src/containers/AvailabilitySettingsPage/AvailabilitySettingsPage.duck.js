@@ -1,18 +1,21 @@
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { currentUserShowSuccess } from '../../ducks/user.duck';
+import { getProcess, resolveLatestProcessName } from '../../transactions/transaction';
 
 // ================ Action types ================ //
 
-export const CLEAR_UPDATED_FORM = 'app/ProfileSettingsPage/CLEAR_UPDATED_FORM';
+export const CLEAR_UPDATED_FORM = 'app/AvailabilitySettingsPage/CLEAR_UPDATED_FORM';
 
-export const UPLOAD_IMAGE_REQUEST = 'app/ProfileSettingsPage/UPLOAD_IMAGE_REQUEST';
-export const UPLOAD_IMAGE_SUCCESS = 'app/ProfileSettingsPage/UPLOAD_IMAGE_SUCCESS';
-export const UPLOAD_IMAGE_ERROR = 'app/ProfileSettingsPage/UPLOAD_IMAGE_ERROR';
+export const UPLOAD_IMAGE_REQUEST = 'app/AvailabilitySettingsPage/UPLOAD_IMAGE_REQUEST';
+export const UPLOAD_IMAGE_SUCCESS = 'app/AvailabilitySettingsPage/UPLOAD_IMAGE_SUCCESS';
+export const UPLOAD_IMAGE_ERROR = 'app/AvailabilitySettingsPage/UPLOAD_IMAGE_ERROR';
 
-export const UPDATE_PROFILE_REQUEST = 'app/ProfileSettingsPage/UPDATE_PROFILE_REQUEST';
-export const UPDATE_PROFILE_SUCCESS = 'app/ProfileSettingsPage/UPDATE_PROFILE_SUCCESS';
-export const UPDATE_PROFILE_ERROR = 'app/ProfileSettingsPage/UPDATE_PROFILE_ERROR';
+export const UPDATE_PROFILE_REQUEST = 'app/AvailabilitySettingsPage/UPDATE_PROFILE_REQUEST';
+export const UPDATE_PROFILE_SUCCESS = 'app/AvailabilitySettingsPage/UPDATE_PROFILE_SUCCESS';
+export const UPDATE_PROFILE_ERROR = 'app/AvailabilitySettingsPage/UPDATE_PROFILE_ERROR';
+
+export const FETCH_ACCEPTED_TRANSACTIONS = 'app/AvailabilitySettingsPage/FETCH_ACCEPTED_TRANSACTIONS';
 
 // ================ Reducer ================ //
 
@@ -22,6 +25,7 @@ const initialState = {
   uploadInProgress: false,
   updateInProgress: false,
   updateProfileError: null,
+  transactions: []
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -70,6 +74,9 @@ export default function reducer(state = initialState, action = {}) {
     case CLEAR_UPDATED_FORM:
       return { ...state, updateProfileError: null, uploadImageError: null };
 
+    case FETCH_ACCEPTED_TRANSACTIONS:
+      return {...state, transactions: payload.data}
+
     default:
       return state;
   }
@@ -105,6 +112,12 @@ export const updateProfileError = error => ({
   type: UPDATE_PROFILE_ERROR,
   payload: error,
   error: true,
+});
+
+
+export const queryAcceptedTransactions = transactions => ({
+  type: FETCH_ACCEPTED_TRANSACTIONS,
+  payload: { data: transactions },
 });
 
 // ================ Thunk ================ //
@@ -166,10 +179,18 @@ export const loadData = (params, search, config) => {
     return sdk.transactions
       .query({ status: "accepted", only: "sale" })
       .then(response => {
-        console.log(response)
+        let transactions = response.data.data
+        transactions = transactions.filter(transaction => {
+          const processName = resolveLatestProcessName(transaction?.attributes?.processName);
+          const process = getProcess(processName);
+          const { getState } = process;
+          const processState = getState(transaction);
+          return processState == 'accepted'
+        });
+        
         // dispatch(addOwnEntities(response));
-        // dispatch(queryListingsSuccess(response));
-        return response;
+        dispatch(queryAcceptedTransactions(transactions));
+        return ;
       })
       .catch(e => {
         // dispatch(queryListingsError(storableError(e)));

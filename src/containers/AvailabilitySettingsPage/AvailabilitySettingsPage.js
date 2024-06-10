@@ -21,6 +21,7 @@ import { initialValuesForUserFields, pickUserFieldsData } from '../../util/userH
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import "react-big-calendar/lib/css/react-big-calendar.css"
+import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 const localizer = momentLocalizer(moment)
 
@@ -246,42 +247,57 @@ export const AvailabilitySettingsPageComponent = props => {
       // Set end date to the end of the current week
       endDate.setDate(today.getDate() - today.getDay() + 6 + 7 * i);
     
-      props.transactions?.forEach(listing => {
-        const { id, attributes } = listing;
-        const { title, availabilityPlan } = attributes;
+      // props.transactions?.forEach(listing => {
+      //   const { id, attributes } = listing;
+      //   const { title, availabilityPlan } = attributes;
     
-        if (availabilityPlan && availabilityPlan.entries) {
-          availabilityPlan.entries.forEach(entry => {
-            const { dayOfWeek, startTime, endTime } = entry;
-            const targetDay = new Date(startDate);
+      //   if (availabilityPlan && availabilityPlan.entries) {
+      //     availabilityPlan.entries.forEach(entry => {
+      //       const { dayOfWeek, startTime, endTime } = entry;
+      //       const targetDay = new Date(startDate);
     
-            // Calculate the target day of the week for the current entry
-            const diff = (dayOfWeekMap[dayOfWeek] - startDate.getDay() + 7) % 7;
-            targetDay.setDate(startDate.getDate() + diff);
+      //       // Calculate the target day of the week for the current entry
+      //       const diff = (dayOfWeekMap[dayOfWeek] - startDate.getDay() + 7) % 7;
+      //       targetDay.setDate(startDate.getDate() + diff);
     
-            const start = new Date(targetDay);
-            const end = new Date(targetDay);
+      //       const start = new Date(targetDay);
+      //       const end = new Date(targetDay);
     
-            const [startHour, startMinute] = startTime.split(":").map(Number);
-            const [endHour, endMinute] = endTime.split(":").map(Number);
+      //       const [startHour, startMinute] = startTime.split(":").map(Number);
+      //       const [endHour, endMinute] = endTime.split(":").map(Number);
     
-            start.setHours(startHour, startMinute);
-            end.setHours(endHour, endMinute);
+      //       start.setHours(startHour, startMinute);
+      //       end.setHours(endHour, endMinute);
     
-            events.push({
-              id: id.uuid,
-              title: title,
-              start: start,
-              end: end,
-              allDay: false
-            });
-          });
-        }
-      });
+      //       events.push({
+      //         id: id.uuid,
+      //         title: title,
+      //         start: start,
+      //         end: end,
+      //         allDay: false
+      //       });
+      //     });
+      //   }
+      // });
     }
 
     setEvents(events)
-  }, [props.listings])
+  }, [props.transactions])
+  // console.log(props.transactions)
+
+  const convertToCalendarEvents = (jsonEvents) => {
+    return jsonEvents.map(event => ({
+      title: `${event.listing.attributes.title} : ${event.booking.attributes.state}`,
+      start: new Date(event.booking.attributes.start),
+      end: new Date(event.booking.attributes.end),
+    }));
+  };
+
+  useEffect(() => {
+    setEvents(convertToCalendarEvents(props.transactions));
+    console.log(convertToCalendarEvents(props.transactions))
+  }, [props.transactions])
+
 
   return (
     <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
@@ -331,20 +347,23 @@ AvailabilitySettingsPageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;
-  const {
-    currentPageResultIds,
-  } = state.ManageListingsPage;
-  const {
+  let {
     transactions,
-    uploadImageError,
-    uploadInProgress,
-    updateInProgress,
-    updateProfileError,
   } = state.AvailabilitySettingsPage;
+
+  // const bookings = transactions.map(t => {
+  //   const transactions = getMarketplaceEntities(state, t);
+  //   const transaction = transactions.length > 0 ? transactions[0] : null;
+  //   return transaction
+  // });
+
+  transactions = getMarketplaceEntities(state, transactions)
+
+  console.log(transactions)
+
   return {
     scrollingDisabled: isScrollingDisabled(state),
-    currentPageResultIds,
-    transactions,
+    transactions
   };
 };
 

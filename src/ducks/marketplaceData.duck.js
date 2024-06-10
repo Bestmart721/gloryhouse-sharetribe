@@ -61,8 +61,10 @@ export const getListingsById = (state, listingIds) => {
  * @return {Array<Object>} denormalised entities
  */
 export const getMarketplaceEntities = (state, entityRefs) => {
+  // console.log(JSON.stringify(state, null, 2), entityRefs)
   const { entities } = state.marketplaceData;
   const throwIfNotFound = false;
+  // console.log(denormalisedEntities(entities, entityRefs, throwIfNotFound))
   return denormalisedEntities(entities, entityRefs, throwIfNotFound);
 };
 
