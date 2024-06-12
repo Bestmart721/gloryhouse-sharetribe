@@ -220,7 +220,7 @@ ${chalk.dim(
 )}
 `,
       default: function() {
-        return 'MyMarketplace';
+        return 'GloryHouse';
       },
       when: function(answers) {
         return answers.showAdvancedSettings;

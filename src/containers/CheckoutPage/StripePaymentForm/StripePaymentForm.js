@@ -408,8 +408,8 @@ class StripePaymentForm extends Component {
     }
 
     const params = {
-      message: `Hello ${this.props.authorDisplayName}!\nI request ${(serviceMode == 'virtual' ? 'a Virtual' : 'an In-Person')} service.`
-        + "\n" + (initialMessage ? initialMessage.trim() : null),
+      message: `${(serviceMode == 'virtual' ? 'Virtual' : 'In-Person')} Service request`
+        + (initialMessage ? "\n\n" + initialMessage.trim() : ""),
       card: this.card,
       formId,
       formValues: values,

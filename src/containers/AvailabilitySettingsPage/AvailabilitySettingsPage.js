@@ -290,6 +290,7 @@ export const AvailabilitySettingsPageComponent = props => {
       title: `${event.listing.attributes.title} : ${event.booking.attributes.state}`,
       start: new Date(event.booking.attributes.start),
       end: new Date(event.booking.attributes.end),
+      color: event.booking.attributes.state == 'accepted' ? '#3B71CA' : '#E4A11B'
     }));
   };
 
@@ -298,6 +299,12 @@ export const AvailabilitySettingsPageComponent = props => {
     console.log(convertToCalendarEvents(props.transactions))
   }, [props.transactions])
 
+  const eventStyleGetter = (event, start, end, isSelected) => {
+    console.log(event);
+    var backgroundColor = event.color;
+    var style = { backgroundColor };
+    return { style };
+  }
 
   return (
     <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
@@ -311,7 +318,11 @@ export const AvailabilitySettingsPageComponent = props => {
         footer={<FooterContainer />}
       >
         <div className={css.content}>
-          <MyCalendar selectable events={events} onSelectSlot={handleSelectSlot} onSelectEvent={handleSelectEvent} />
+          <MyCalendar selectable events={events}
+            onSelectSlot={handleSelectSlot}
+            onSelectEvent={handleSelectEvent}
+            eventPropGetter={eventStyleGetter}
+          />
         </div>
       </LayoutSingleColumn>
     </Page>

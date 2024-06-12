@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 
-import { Form, FieldTextInput, SecondaryButtonInline } from '../../../components';
+import { Form, FieldTextInput, SecondaryButtonInline, InlineTextButton } from '../../../components';
 
 import css from './SendMessageForm.module.css';
 
@@ -55,6 +55,7 @@ class SendMessageFormComponent extends Component {
   }
 
   render() {
+    console.log(this.props.ScheduleAction)
     return (
       <FinalForm
         {...this.props}
@@ -93,6 +94,9 @@ class SendMessageFormComponent extends Component {
                     </p>
                   ) : null}
                 </div>
+
+                <InlineTextButton style={{ marginTop: 17, marginRight: 12 }}>{this.props.ScheduleAction}</InlineTextButton>
+
                 <SecondaryButtonInline
                   className={css.submitButton}
                   inProgress={submitInProgress}

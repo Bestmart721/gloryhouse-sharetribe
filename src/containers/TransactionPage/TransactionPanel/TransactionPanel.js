@@ -27,6 +27,7 @@ import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, provider, customer, intl) => {
@@ -72,6 +73,7 @@ export class TransactionPanelComponent extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.messages)
     this.isMobSaf = isMobileSafari();
   }
 
@@ -113,6 +115,10 @@ export class TransactionPanelComponent extends Component {
         behavior: 'smooth',
       });
     }
+  }
+
+  scheduleVideo = () => {
+    alert('-----')
   }
 
   render() {
@@ -187,6 +193,14 @@ export class TransactionPanelComponent extends Component {
     const deliveryMethod = protectedData?.deliveryMethod || 'none';
 
     const classes = classNames(rootClassName || css.root, className);
+
+    const scheduleAction = messages.find(m => m.attributes.content.search("I request a Virtual service.") !== -1) == undefined ? "" :
+      stateData.processState != 'accepted' ? "You need to accept the request before scheduling Virtual Service" :
+        messages.find(m => m.attributes.content.search(/\/v\/vs-.*/) !== -1) == undefined ?
+          <a onClick={this.scheduleVideo}>Schedule Virtual Service</a> :
+          <Link to={messages.find(m => m.attributes.content.search(/\/v\/vs-.*/) !== -1)?.attributes.content.match(/\/v\/vs-.*/)[0]}>Room Link</Link>
+
+    console.log(stateData)
 
     return (
       <div className={classes}>
@@ -289,6 +303,7 @@ export class TransactionPanelComponent extends Component {
                   { id: 'TransactionPanel.sendMessagePlaceholder' },
                   { name: otherUserDisplayNameString }
                 )}
+                ScheduleAction={scheduleAction}
                 inProgress={sendMessageInProgress}
                 sendMessageError={sendMessageError}
                 onFocus={this.onSendMessageFormFocus}

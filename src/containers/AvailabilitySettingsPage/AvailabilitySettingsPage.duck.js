@@ -180,13 +180,13 @@ export const loadData = (params, search, config) => {
       .query({ status: "accepted", only: "sale" })
       .then(response => {
         let transactions = response.data.data
-        transactions = transactions.filter(transaction => {
-          const processName = resolveLatestProcessName(transaction?.attributes?.processName);
-          const process = getProcess(processName);
-          const { getState } = process;
-          const processState = getState(transaction);
-          return processState == 'accepted'
-        });
+        // transactions = transactions.filter(transaction => {
+        //   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
+        //   const process = getProcess(processName);
+        //   const { getState } = process;
+        //   const processState = getState(transaction);
+        //   return processState == 'accepted'
+        // });
         
         // dispatch(addOwnEntities(response));
         dispatch(queryAcceptedTransactions(transactions));
