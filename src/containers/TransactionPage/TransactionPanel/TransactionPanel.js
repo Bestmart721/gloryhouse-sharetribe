@@ -204,7 +204,7 @@ export class TransactionPanelComponent extends Component {
 
     const classes = classNames(rootClassName || css.root, className);
 
-    const scheduleAction = messages.find(m => m.attributes.content.search("I request a Virtual service.") !== -1) == undefined ? "" :
+    const scheduleAction = messages.find(m => m.attributes.content.search("Virtual Service request") !== -1) == undefined ? "" :
       stateData.processState != 'accepted' ? "You need to accept the request before scheduling Virtual Service" :
         messages.find(m => m.attributes.content.search(/\/v\/vs-.*/) !== -1) == undefined ?
           <a onClick={this.scheduleVideo}>Schedule Virtual Service</a> :
