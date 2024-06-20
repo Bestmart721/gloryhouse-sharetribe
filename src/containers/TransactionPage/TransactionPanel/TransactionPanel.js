@@ -117,8 +117,18 @@ export class TransactionPanelComponent extends Component {
     }
   }
 
-  scheduleVideo = () => {
-    alert('-----')
+  scheduleVideo = async () => {
+    const response = await fetch('https://api.whereby.dev/v1/meetings', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "endDate": "2024-06-12T15:20:21.754Z"
+      }),
+    });
+    const data = await response.json();
+    console.log(data)
   }
 
   render() {

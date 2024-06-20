@@ -633,6 +633,23 @@ export const BookingDatesFormComponent = props => {
               </span>
             ) : null}
 
+            <div className={css.priceBreakdownContainer}>
+              <FieldRadioButton
+                id={`inPerson`}
+                name="serviceMode"
+                label="In Person"
+                value="inPerson"
+                showAsRequired={true}
+              />
+              <FieldRadioButton
+                id={`virtual`}
+                name="serviceMode"
+                label="Virtual"
+                value="virtual"
+                showAsRequired={true}
+              />
+            </div>
+
             <div className={css.submitButton}>
               <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
                 <FormattedMessage id="BookingDatesForm.requestToBook" />
