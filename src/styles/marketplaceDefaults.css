@@ -1,5 +1,6 @@
 @import '../assets/sanitize.css';
 @import './customMediaQueries.css';
+@import './customize.css';
 
 /* ================ Custom Properties aka CSS variables ================ */
 

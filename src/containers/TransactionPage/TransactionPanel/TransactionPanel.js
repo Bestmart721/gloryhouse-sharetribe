@@ -9,7 +9,7 @@ import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
 
-import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
+import { AvatarLarge, Modal, NamedLink, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
@@ -30,6 +30,11 @@ import css from './TransactionPanel.module.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 import { createVideoRoom } from '../../../util/api';
+
+const onManageDisableScrolling = (componentId, scrollingDisabled = true) => {
+  // We are just checking the value for now
+  console.log('Toggling Modal - scrollingDisabled currently:', componentId, scrollingDisabled);
+};
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, provider, customer, intl) => {
@@ -64,6 +69,7 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
+      scheduleModal: false
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -119,10 +125,11 @@ export class TransactionPanelComponent extends Component {
     }
   }
 
-  scheduleVideo = async () => {
-    createVideoRoom({}).then(response => {
-      console.log(response)
-    })
+  scheduleVideo = () => {
+    this.setState({ scheduleModal: true });
+    // createVideoRoom({}).then(response => {
+    //   console.log(response)
+    // })
   }
 
   render() {
@@ -376,6 +383,18 @@ export class TransactionPanelComponent extends Component {
             </div>
           </div>
         </div>
+
+        <Modal
+          id="OldModal"
+          isOpen={this.state.scheduleModal} 
+          onClose={() => {
+            this.setState({ scheduleModal: false });
+            console.log('Closing modal');
+          }}
+          onManageDisableScrolling={onManageDisableScrolling}
+        >
+          <h3 className='text-center'>Create Meeting Room</h3>
+        </Modal>
       </div>
     );
   }
