@@ -633,7 +633,7 @@ class StripePaymentForm extends Component {
             {this.props.serviceMode ?
               <p>
                 Service mode:
-                <strong>{this.props.serviceMode == 'virtual' ? 'Virtual' : 'In Person'}</strong>
+                <strong style={{color:'var(--marketplaceColor)'}}>{this.props.serviceMode == 'virtual' ? 'Virtual' : 'In Person'}</strong>
               </p>
               : ""}
             <FieldTextInput type='hidden' name='serviceMode' defaultValue={this.props.serviceMode} />

@@ -166,7 +166,7 @@ const routeConfiguration = (layoutConfig) => {
       auth: true,
       authPage: 'LoginPage',
       component: AvailabilitySettingsPage,
-      loadData: pageDataLoadingAPI.AvailabilitySettingsPage.loadData,
+      loadData: pageDataLoadingAPI.InboxPage.loadData,
     },
     {
       path: '/profile-settings',
@@ -327,7 +327,7 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.PrivacyPolicyPage.loadData,
     },
     {
-      path: '/v',
+      path: '/v/:roomName',
       name: 'VideoCallPage',
       auth: true,
       component: VideoCallPage,

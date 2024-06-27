@@ -61,7 +61,7 @@ const getTransactionInfo = (listingTypes, existingListingTypeInfo = {}, inlcudeL
  *
  * If listing type (incl. process & unitType) has been set, we won't allow change to it.
  * It's possible to make it editable, but it becomes somewhat complex to modify following panels,
- * for the different process. (E.g. adjusting stock vs booking availability settings,
+ * for the different process. (E.g. adjusting stock vs booking Check Availability,
  * if process has been changed for existing listing.)
  *
  * @param {Object} publicData JSON-like data stored to listing entity.

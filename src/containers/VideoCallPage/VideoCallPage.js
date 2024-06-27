@@ -11,7 +11,7 @@ import { propTypes } from '../../util/types';
 import { H1 } from '../PageBuilder/Primitives/Heading';
 // import FallbackPage, { fallbackSections } from './FallbackPage';
 import { ASSET_NAME } from './VideoCallPage.duck';
-import MyComponent from '../../components/VideoView/MyComponent';
+import WhereByRoom from '../../components/VideoView/WhereByRoom';
 
 const PageBuilder = loadable(() =>
   import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
@@ -65,7 +65,7 @@ const VideoCallPageComponent = props => {
       inProgress={inProgress}
       error={error}
     >
-      <MyComponent />
+      <WhereByRoom roomName={props.params.roomName} />
     </PageBuilder>
   );
 };

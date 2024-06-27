@@ -30,6 +30,7 @@ import css from './TransactionPanel.module.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 import { createVideoRoom } from '../../../util/api';
+import { marketplaceColor } from '../../../config/configBranding';
 
 const onManageDisableScrolling = (componentId, scrollingDisabled = true) => {
   // We are just checking the value for now
@@ -69,7 +70,8 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
-      scheduleModal: false
+      scheduleModal: false,
+      loading: false,
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
@@ -126,10 +128,22 @@ export class TransactionPanelComponent extends Component {
   }
 
   scheduleVideo = () => {
-    this.setState({ scheduleModal: true });
-    // createVideoRoom({}).then(response => {
-    //   console.log(response)
-    // })
+    this.setState({ loading: true });
+    createVideoRoom({}).then(response => {
+      const msg = `Virtual Room URL\n${window.location.protocol}//${window.location.host}/v${response.roomName}`
+      this.props.onSendMessage(this.props.transactionId, msg, this.props.config)
+      .then(messageId => {
+        this.setState({ loading: false });
+        form.reset();
+        this.scrollToMessage(messageId);
+      })
+      .catch(e => {
+        this.setState({ loading: false });
+        // Ignore, Redux handles the error
+      });
+    }).catch(e => {
+      this.setState({ loading: false });
+    });
   }
 
   render() {
@@ -206,10 +220,11 @@ export class TransactionPanelComponent extends Component {
     const classes = classNames(rootClassName || css.root, className);
 
     const scheduleAction = messages.find(m => m.attributes.content.search("Virtual Service request") !== -1) == undefined ? "" :
-      stateData.processState != 'accepted' ? "You need to accept the request before scheduling Virtual Service" :
-        messages.find(m => m.attributes.content.search(/\/v\/vs-.*/) !== -1) == undefined ?
+      this.state.loading ? "Creating Virtual Room..." :
+      stateData.processState != 'accepted' ? "Accept the request to schedule Virtual Service" :
+        messages.find(m => m.attributes.content.search(/\/v\/.*/) !== -1) == undefined ?
           <a onClick={this.scheduleVideo}>Schedule Virtual Service</a> :
-          <Link to={messages.find(m => m.attributes.content.search(/\/v\/vs-.*/) !== -1)?.attributes.content.match(/\/v\/vs-.*/)[0]}>Room Link</Link>
+          <Link to={messages.find(m => m.attributes.content.search(/\/v\/.*/) !== -1)?.attributes.content.match(/\/v\/.*/)[0]}>Enter the Room</Link>
 
     console.log(stateData)
 
@@ -314,7 +329,7 @@ export class TransactionPanelComponent extends Component {
                   { id: 'TransactionPanel.sendMessagePlaceholder' },
                   { name: otherUserDisplayNameString }
                 )}
-                ScheduleAction={scheduleAction}
+                ScheduleAction={transactionRole == 'provider' ? scheduleAction : <></>}
                 inProgress={sendMessageInProgress}
                 sendMessageError={sendMessageError}
                 onFocus={this.onSendMessageFormFocus}
@@ -393,7 +408,7 @@ export class TransactionPanelComponent extends Component {
           }}
           onManageDisableScrolling={onManageDisableScrolling}
         >
-          <h3 className='text-center'>Create Meeting Room</h3>
+          <h3 className='text-center' style={{color:'var(--marketplaceColor)'}}>Create Meeting Room</h3>
         </Modal>
       </div>
     );

@@ -4,6 +4,7 @@ import { storableError } from '../../util/errors';
 import { parse } from '../../util/urlHelpers';
 import { getAllTransitionsForEveryProcess } from '../../transactions/transaction';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { queryAcceptedTransactions } from '../AvailabilitySettingsPage/AvailabilitySettingsPage.duck';
 
 const sortedTransactions = txs =>
   reverse(
@@ -74,7 +75,7 @@ const fetchOrdersOrSalesError = e => ({
 const INBOX_PAGE_SIZE = 10;
 
 export const loadData = (params, search) => (dispatch, getState, sdk) => {
-  const { tab } = params;
+  const { tab = 'sales' } = params;
 
   const onlyFilterValues = {
     orders: 'order',
@@ -117,7 +118,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
     perPage: INBOX_PAGE_SIZE,
   };
 
-  return sdk.transactions
+  sdk.transactions
     .query(apiQueryParams)
     .then(response => {
       dispatch(addMarketplaceEntities(response));
@@ -126,6 +127,28 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
     })
     .catch(e => {
       dispatch(fetchOrdersOrSalesError(storableError(e)));
+      throw e;
+    });
+
+
+  return sdk.transactions
+    .query({ status: "accepted", only: "sale" })
+    .then(response => {
+      let transactions = response.data.data
+      // transactions = transactions.filter(transaction => {
+      //   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
+      //   const process = getProcess(processName);
+      //   const { getState } = process;
+      //   const processState = getState(transaction);
+      //   return processState == 'accepted'
+      // });
+
+      // dispatch(addOwnEntities(response));
+      dispatch(queryAcceptedTransactions(transactions));
+      return;
+    })
+    .catch(e => {
+      // dispatch(queryListingsError(storableError(e)));
       throw e;
     });
 };
