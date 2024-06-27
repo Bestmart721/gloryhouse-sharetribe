@@ -29,6 +29,8 @@ import PanelHeading from './PanelHeading';
 import css from './TransactionPanel.module.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
+import { createVideoRoom } from '../../../util/api';
+
 // Helper function to get display names for different roles
 const displayNames = (currentUser, provider, customer, intl) => {
   const authorDisplayName = <UserDisplayName user={provider} intl={intl} />;
@@ -118,17 +120,9 @@ export class TransactionPanelComponent extends Component {
   }
 
   scheduleVideo = async () => {
-    const response = await fetch('https://api.whereby.dev/v1/meetings', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "endDate": "2024-06-12T15:20:21.754Z"
-      }),
-    });
-    const data = await response.json();
-    console.log(data)
+    createVideoRoom({}).then(response => {
+      console.log(response)
+    })
   }
 
   render() {

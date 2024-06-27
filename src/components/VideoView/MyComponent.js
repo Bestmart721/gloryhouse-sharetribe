@@ -3,7 +3,7 @@ import "@whereby.com/browser-sdk"
 import "./MyComponent.module.css"
 
 const MyComponent = ({ roomUrl }) => {
-    return <whereby-embed style={{height:'600px'}} room={"https://gloryhouse.whereby.com/dev-teste77fe8b5-32b4-4e99-a2d4-1ea0c4d3dff7?roomKey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZWV0aW5nSWQiOiI4Njk1ODQ1OSIsInJvb21SZWZlcmVuY2UiOnsicm9vbU5hbWUiOiIvZGV2LXRlc3RlNzdmZThiNS0zMmI0LTRlOTktYTJkNC0xZWEwYzRkM2RmZjciLCJvcmdhbml6YXRpb25JZCI6IjIzNTUxMCJ9LCJpc3MiOiJodHRwczovL2FjY291bnRzLnNydi53aGVyZWJ5LmNvbSIsImlhdCI6MTcxODE1ODU5Niwicm9vbUtleVR5cGUiOiJtZWV0aW5nSG9zdCJ9.Cj_hX2XjLFPmYv5hfzf-CB42RDT-Fs2ZQ6RRGItgSJc"} />
+    return <whereby-embed style={{height:'600px'}} room={"https://gloryhouse.whereby.com/dev-test92b81e31-a8fb-4fe6-9b56-a06a20ee0a3b?roomKey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZWV0aW5nSWQiOiI4NzcwNzIzOSIsInJvb21SZWZlcmVuY2UiOnsicm9vbU5hbWUiOiIvZGV2LXRlc3Q5MmI4MWUzMS1hOGZiLTRmZTYtOWI1Ni1hMDZhMjBlZTBhM2IiLCJvcmdhbml6YXRpb25JZCI6IjIzNTUxMCJ9LCJpc3MiOiJodHRwczovL2FjY291bnRzLnNydi53aGVyZWJ5LmNvbSIsImlhdCI6MTcxOTE4ODk3Mywicm9vbUtleVR5cGUiOiJtZWV0aW5nSG9zdCJ9.rs1GZbh5v3vPmLynDfdKquJlU8fKuzQ5gHhA4K98gas"} />
 }
 
 export default MyComponent
