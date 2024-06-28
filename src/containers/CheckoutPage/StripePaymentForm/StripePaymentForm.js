@@ -408,7 +408,7 @@ class StripePaymentForm extends Component {
     }
 
     const params = {
-      message: `${(serviceMode == 'virtual' ? 'Virtual' : 'In-Person')} Service request`
+      message: `${(serviceMode == 'virtual' ? 'Virtual' : 'In-Person')} Appointment request`
         + (initialMessage ? "\n\n" + initialMessage.trim() : ""),
       card: this.card,
       formId,

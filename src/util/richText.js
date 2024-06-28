@@ -92,12 +92,14 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
     // Split strings like "(http://www.example.com)" to ["(","http://www.example.com",")"]
     return word.split(urlRegex).map(w => {
       const isEmptyString = !w.match(urlRegex);
+      const isVirtualRoomLink = w.match(/.*\/v\/.*/) !== null;
+
       const sanitizedURL = !isEmptyString && linkify ? sanitizeUrl(w) : w;
       return isEmptyString ? (
         w
       ) : linkify ? (
         <ExternalLink key={key} href={sanitizedURL} className={linkClass}>
-          {sanitizedURL}
+          {isVirtualRoomLink ? "Virtual Appointment Room Link" : sanitizedURL}
         </ExternalLink>
       ) : linkClass ? (
         <span key={key} className={linkClass}>

@@ -38,8 +38,8 @@ const Message = props => {
         <p className={css.messageContent}>{content}</p>
         <p style={{ margin: 0, display: "flex" }}>
           <span className={css.messageDate}>{formattedDate}</span>
-          {/* {content.join("").search("Virtual Service request") !== -1 ?
-            <a target='_blank' className='marketplaceMessageDateFontStyles' href="https://www.google.com/calendar/render?action=TEMPLATE&text=Video+Call&dates=20240610T150000Z/20240610T160000Z&details=Join+the+video+call+using+this+link:+https://example.com/call-link&location=&recur=RRULE:FREQ=DAILY;BYHOUR=12;BYMINUTE=0;BYSECOND=0&trp=false&sprop=&sprop=name:" style={{ marginLeft: 'auto' }}>Schedule Virtual Service</a> :
+          {/* {content.join("").search("Virtual Appointment request") !== -1 ?
+            <a target='_blank' className='marketplaceMessageDateFontStyles' href="https://www.google.com/calendar/render?action=TEMPLATE&text=Video+Call&dates=20240610T150000Z/20240610T160000Z&details=Join+the+video+call+using+this+link:+https://example.com/call-link&location=&recur=RRULE:FREQ=DAILY;BYHOUR=12;BYMINUTE=0;BYSECOND=0&trp=false&sprop=&sprop=name:" style={{ marginLeft: 'auto' }}>Schedule Virtual Appointment</a> :
             <></>} */}
         </p>
       </div>

@@ -130,7 +130,7 @@ export class TransactionPanelComponent extends Component {
   scheduleVideo = () => {
     this.setState({ loading: true });
     createVideoRoom({endDate: new Date(this.props.orderBreakdown.props.booking.attributes.end)}).then(response => {
-      const msg = `Virtual Room URL\n${window.location.protocol}//${window.location.host}/v${response.roomName}`
+      const msg = `${window.location.protocol}//${window.location.host}/v${response.roomName}`
       this.props.onSendMessage(this.props.transactionId, msg, this.props.config)
         .then(messageId => {
           this.setState({ loading: false });
@@ -219,19 +219,19 @@ export class TransactionPanelComponent extends Component {
 
     const classes = classNames(rootClassName || css.root, className);
 
-    const roomLinkFull = messages.find(m => m.attributes.content.search(/\/v\/.*/) !== -1);
-    const roomName = roomLinkFull?.attributes.content.match(/\/v\/.*/)[0]
+    const messageWithLink = messages.find(m => m.attributes.content.search(/\/v\/.*/) !== -1);
+    const roomName = messageWithLink?.attributes.content.match(/\/v\/.*/)[0]
 
     let bookingStart = new Date(orderBreakdown.props.booking.attributes.start).toISOString().replace(/-|:|\.\d\d\d/g, '')
     let bookingEnd = new Date(orderBreakdown.props.booking.attributes.end).toISOString().replace(/-|:|\.\d\d\d/g, '')
-    const googleCalendarLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Meeting&dates=${bookingStart}/${bookingEnd}&details=Join%20the%20meeting%20room%20for%20the%20transaction%0A%0A${roomLinkFull?.attributes.content.match(/.*\/v\/.*/)[0]}`;
+    const googleCalendarLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Meeting&dates=${bookingStart}/${bookingEnd}&details=Join%20the%20meeting%20room%20for%20the%20transaction%0A%0A${messageWithLink?.attributes.content.match(/.*\/v\/.*/)[0]}`;
 
-    const scheduleAction = messages.find(m => m.attributes.content.search("Virtual Service request") !== -1) == undefined ? "" :
-      roomLinkFull != undefined ?
+    const scheduleAction = messages.find(m => m.attributes.content.search("Virtual Appointment request") !== -1) == undefined ? "" :
+      messageWithLink != undefined ?
         <><a className="mr-5" href={googleCalendarLink} target='_blank'>View on Google Calendar</a>&nbsp;&nbsp;&nbsp;&nbsp;<Link to={roomName}>Enter the Room</Link></> :        transactionRole != 'provider' ? "" :
           this.state.loading ? "Creating Virtual Room..." :
-            stateData.processState != 'accepted' ? "Accept the request to schedule Virtual Service" :
-              <a onClick={this.scheduleVideo}>Schedule Virtual Service</a>
+            stateData.processState != 'accepted' ? "Accept to confirm Virtual Appointment" :
+              <a onClick={this.scheduleVideo}>Confirm Virtual Appointment</a>
 
     console.log(orderBreakdown.props.booking.attributes.start)
 
