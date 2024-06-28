@@ -95,7 +95,7 @@ class SendMessageFormComponent extends Component {
                   ) : null}
                 </div>
 
-                <InlineTextButton style={{ marginTop: 17, marginRight: 12 }}>{this.props.ScheduleAction}</InlineTextButton>
+                <div style={{ marginTop: 17, padding: 12 }}>{this.props.ScheduleAction}</div>
 
                 <SecondaryButtonInline
                   className={css.submitButton}

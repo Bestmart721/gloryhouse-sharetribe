@@ -287,10 +287,10 @@ export const AvailabilitySettingsPageComponent = props => {
 
   const convertToCalendarEvents = (jsonEvents) => {
     return jsonEvents.map(event => ({
-      title: `${event.listing.attributes.title} : ${event.booking.attributes.state}`,
-      start: new Date(event.booking.attributes.start),
-      end: new Date(event.booking.attributes.end),
-      color: event.booking.attributes.state == 'accepted' ? '#3B71CA' : '#E4A11B'
+      title: `${event.listing?.attributes.title} : ${event.booking?.attributes.state}`,
+      start: new Date(event.booking?.attributes.start),
+      end: new Date(event.booking?.attributes.end),
+      color: event.booking?.attributes.state == 'accepted' ? '#3B71CA' : '#E4A11B'
     }));
   };
 

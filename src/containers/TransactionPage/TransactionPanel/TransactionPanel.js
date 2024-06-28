@@ -129,18 +129,18 @@ export class TransactionPanelComponent extends Component {
 
   scheduleVideo = () => {
     this.setState({ loading: true });
-    createVideoRoom({}).then(response => {
+    createVideoRoom({endDate: new Date(this.props.orderBreakdown.props.booking.attributes.end)}).then(response => {
       const msg = `Virtual Room URL\n${window.location.protocol}//${window.location.host}/v${response.roomName}`
       this.props.onSendMessage(this.props.transactionId, msg, this.props.config)
-      .then(messageId => {
-        this.setState({ loading: false });
-        form.reset();
-        this.scrollToMessage(messageId);
-      })
-      .catch(e => {
-        this.setState({ loading: false });
-        // Ignore, Redux handles the error
-      });
+        .then(messageId => {
+          this.setState({ loading: false });
+          form.reset();
+          this.scrollToMessage(messageId);
+        })
+        .catch(e => {
+          this.setState({ loading: false });
+          // Ignore, Redux handles the error
+        });
     }).catch(e => {
       this.setState({ loading: false });
     });
@@ -219,14 +219,21 @@ export class TransactionPanelComponent extends Component {
 
     const classes = classNames(rootClassName || css.root, className);
 
-    const scheduleAction = messages.find(m => m.attributes.content.search("Virtual Service request") !== -1) == undefined ? "" :
-      this.state.loading ? "Creating Virtual Room..." :
-      stateData.processState != 'accepted' ? "Accept the request to schedule Virtual Service" :
-        messages.find(m => m.attributes.content.search(/\/v\/.*/) !== -1) == undefined ?
-          <a onClick={this.scheduleVideo}>Schedule Virtual Service</a> :
-          <Link to={messages.find(m => m.attributes.content.search(/\/v\/.*/) !== -1)?.attributes.content.match(/\/v\/.*/)[0]}>Enter the Room</Link>
+    const roomLinkFull = messages.find(m => m.attributes.content.search(/\/v\/.*/) !== -1);
+    const roomName = roomLinkFull?.attributes.content.match(/\/v\/.*/)[0]
 
-    console.log(stateData)
+    let bookingStart = new Date(orderBreakdown.props.booking.attributes.start).toISOString().replace(/-|:|\.\d\d\d/g, '')
+    let bookingEnd = new Date(orderBreakdown.props.booking.attributes.end).toISOString().replace(/-|:|\.\d\d\d/g, '')
+    const googleCalendarLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Meeting&dates=${bookingStart}/${bookingEnd}&details=Join%20the%20meeting%20room%20for%20the%20transaction%0A%0A${roomLinkFull?.attributes.content.match(/.*\/v\/.*/)[0]}`;
+
+    const scheduleAction = messages.find(m => m.attributes.content.search("Virtual Service request") !== -1) == undefined ? "" :
+      roomLinkFull != undefined ?
+        <><a className="mr-5" href={googleCalendarLink} target='_blank'>View on Google Calendar</a>&nbsp;&nbsp;&nbsp;&nbsp;<Link to={roomName}>Enter the Room</Link></> :        transactionRole != 'provider' ? "" :
+          this.state.loading ? "Creating Virtual Room..." :
+            stateData.processState != 'accepted' ? "Accept the request to schedule Virtual Service" :
+              <a onClick={this.scheduleVideo}>Schedule Virtual Service</a>
+
+    console.log(orderBreakdown.props.booking.attributes.start)
 
     return (
       <div className={classes}>
@@ -329,7 +336,7 @@ export class TransactionPanelComponent extends Component {
                   { id: 'TransactionPanel.sendMessagePlaceholder' },
                   { name: otherUserDisplayNameString }
                 )}
-                ScheduleAction={transactionRole == 'provider' ? scheduleAction : <></>}
+                ScheduleAction={scheduleAction}
                 inProgress={sendMessageInProgress}
                 sendMessageError={sendMessageError}
                 onFocus={this.onSendMessageFormFocus}
@@ -401,14 +408,14 @@ export class TransactionPanelComponent extends Component {
 
         <Modal
           id="OldModal"
-          isOpen={this.state.scheduleModal} 
+          isOpen={this.state.scheduleModal}
           onClose={() => {
             this.setState({ scheduleModal: false });
             console.log('Closing modal');
           }}
           onManageDisableScrolling={onManageDisableScrolling}
         >
-          <h3 className='text-center' style={{color:'var(--marketplaceColor)'}}>Create Meeting Room</h3>
+          <h3 className='text-center' style={{ color: 'var(--marketplaceColor)' }}>Create Meeting Room</h3>
         </Modal>
       </div>
     );

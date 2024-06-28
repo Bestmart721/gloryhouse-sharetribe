@@ -84,7 +84,7 @@ const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FjY2
 
 router.post('/video/create-room', async (req, res) => {
   const data = {
-    endDate: "2099-02-18T14:23:00.000Z",
+    endDate: req.body.endDate,
     fields: ["hostRoomUrl"],
   };
 
